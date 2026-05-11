@@ -3,45 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pro Rune Calculator</title>
+    <title>Blackwave Rune Calc</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root { --primary: #2563eb; --bg: #f8fafc; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: #334155; padding: 20px; display: flex; justify-content: center; }
-        .container { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); max-width: 500px; width: 100%; }
-        h2 { margin-top: 0; color: var(--primary); border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
-        .section { margin-bottom: 20px; }
-        label { font-weight: 600; font-size: 0.9rem; display: block; margin-bottom: 5px; }
-        select, input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; }
-        .inventory-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-height: 200px; overflow-y: auto; padding-right: 5px; border: 1px solid #f1f5f9; padding: 10px; border-radius: 6px; }
-        .inventory-item { display: flex; flex-direction: column; }
-        .result-panel { background: #eff6ff; padding: 15px; border-radius: 8px; border: 1px solid #dbeafe; margin-top: 20px; }
-        .stat { display: flex; justify-content: space-between; margin-bottom: 8px; }
-        .stat b { color: var(--primary); }
+        body { background-color: #0f172a; color: #e2e8f0; }
+        .bw-card { background: #1e293b; border: 1px solid #334155; }
+        .bw-input { background: #0f172a; border: 1px solid #475569; color: white; }
+        .bw-input:focus { border-color: #38bdf8; outline: none; box-shadow: 0 0 10px rgba(56, 189, 248, 0.2); }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
     </style>
 </head>
-<body>
+<body class="p-4 sm:p-8">
 
-<div class="container">
-    <h2>Rune Master Calc</h2>
-    
-    <div class="section">
-        <label>Your Goal Rune:</label>
-        <select id="goalRune" onchange="calculate()"></select>
-    </div>
+    <div class="max-w-2xl mx-auto">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="p-2 bg-blue-500/20 rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+            </div>
+            <h1 class="text-2xl font-bold tracking-tight">RUNE MERGE CALCULATOR</h1>
+        </div>
 
-    <div class="section">
-        <label>Your Current Inventory (Owned):</label>
-        <div class="inventory-grid" id="inventoryInputs"></div>
-    </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <div class="space-y-6">
+                <div class="bw-card p-5 rounded-xl">
+                    <label class="block text-sm font-semibold text-blue-400 uppercase mb-2">Target Rune</label>
+                    <select id="goalRune" onchange="calculate()" class="bw-input w-full p-3 rounded-lg"></select>
+                </div>
 
-    <div class="result-panel">
-        <div class="stat"><span>Total T1 Value of Goal:</span> <span id="goalValue">0</span></div>
-        <div class="stat"><span>Your Current T1 Value:</span> <span id="currentValue">0</span></div>
-        <hr style="border: 0; border-top: 1px solid #dbeafe;">
-        <div class="stat"><span>Remaining T1s Needed:</span> <b id="neededT1">0</b></div>
-        <div class="stat"><span>Est. Silver Cost (2/merge):</span> <b id="silverCost">0</b></div>
+                <div class="bw-card p-5 rounded-xl">
+                    <label class="block text-sm font-semibold text-blue-400 uppercase mb-2">Current Inventory</label>
+                    <div id="inventoryInputs" class="grid grid-cols-2 gap-3 max-h-[400px] overflow-y-auto pr-2">
+                        </div>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bw-card p-6 rounded-xl border-l-4 border-blue-500 shadow-lg">
+                    <h3 class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-4">Requirement Analysis</h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-sm text-gray-400">Net T1-1★ Runes Needed</p>
+                            <p id="neededT1" class="text-3xl font-mono font-bold text-white">0</p>
+                        </div>
+                        
+                        <div class="pt-4 border-t border-slate-700">
+                            <p class="text-sm text-gray-400 font-semibold mb-1">Estimated Cost</p>
+                            <div class="flex items-center gap-2">
+                                <span id="silverCost" class="text-xl font-bold text-yellow-500">0</span>
+                                <span class="text-xs text-gray-500 uppercase">Silver</span>
+                            </div>
+                        </div>
+
+                        <div id="progressBox" class="w-full bg-slate-800 rounded-full h-2.5 mt-4">
+                            <div id="progressBar" class="bg-blue-500 h-2.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                        <p id="progressText" class="text-right text-[10px] text-gray-500 uppercase font-bold">0% Complete</p>
+                    </div>
+                </div>
+
+                <button onclick="clearInv()" class="w-full py-3 text-xs font-bold tracking-widest text-slate-400 hover:text-white uppercase transition-colors">
+                    Reset Inventory
+                </button>
+            </div>
+
+        </div>
     </div>
-</div>
 
 <script>
     const SILVER_PER_MERGE = 2;
@@ -49,67 +80,70 @@
     const maxTier = 5;
     const starsPerTier = 3;
 
-    // Build Rune Data Object
+    // Build the data model
     let power = 0;
     for (let t = 1; t <= maxTier; t++) {
         for (let s = 1; s <= starsPerTier; s++) {
             if (t === 5 && s > 1) break;
-            const name = `T${t}-${s}★`;
-            const t1Value = Math.pow(2, power);
-            runeList.push({ name, t1Value });
+            runeList.push({ name: `T${t}-${s}★`, val: Math.pow(2, power) });
             power++;
         }
     }
 
-    // Setup UI
     const goalSelect = document.getElementById('goalRune');
     const invGrid = document.getElementById('inventoryInputs');
 
-    runeList.forEach((rune, index) => {
-        // Populate Dropdown
-        let opt = document.createElement('option');
-        opt.value = rune.t1Value;
+    // Build UI Elements
+    runeList.forEach((rune, i) => {
+        // Dropdown
+        const opt = document.createElement('option');
+        opt.value = rune.val;
         opt.textContent = rune.name;
-        if(index === runeList.length - 1) opt.selected = true;
+        if(i === runeList.length - 1) opt.selected = true;
         goalSelect.appendChild(opt);
 
-        // Populate Inventory Inputs
+        // Inputs
         const div = document.createElement('div');
-        div.className = 'inventory-item';
         div.innerHTML = `
-            <label style="font-size: 0.75rem">${rune.name}</label>
-            <input type="number" min="0" value="0" class="inv-input" data-value="${rune.t1Value}" oninput="calculate()">
+            <label class="text-[10px] text-slate-500 font-bold ml-1">${rune.name}</label>
+            <input type="number" min="0" value="${localStorage.getItem(rune.name) || 0}" 
+                   class="bw-input inv-input w-full p-2 rounded-md text-sm" 
+                   data-name="${rune.name}" data-val="${rune.val}" oninput="calculate()">
         `;
         invGrid.appendChild(div);
     });
 
     function calculate() {
-        const goalT1Value = parseInt(goalSelect.value);
-        let currentT1Value = 0;
+        const goalVal = parseInt(goalSelect.value);
+        let currentVal = 0;
 
-        // Calculate total value of what user owns
         document.querySelectorAll('.inv-input').forEach(input => {
             const count = parseInt(input.value) || 0;
-            const val = parseInt(input.getAttribute('data-value'));
-            currentT1Value += (count * val);
+            const val = parseInt(input.dataset.val);
+            currentVal += (count * val);
+            // Save to local storage
+            localStorage.setItem(input.dataset.name, count);
         });
 
-        const needed = Math.max(0, goalT1Value - currentT1Value);
-        
-        // Logic: To get "needed" T1s into higher tiers, you perform (needed - 1) merges.
-        // If they already have enough, cost is 0.
+        const needed = Math.max(0, goalVal - currentVal);
         const silver = needed > 0 ? (needed - 1) * SILVER_PER_MERGE : 0;
-
-        // Update Display
-        document.getElementById('goalValue').textContent = goalT1Value.toLocaleString();
-        document.getElementById('currentValue').textContent = currentT1Value.toLocaleString();
+        
+        // Update UI
         document.getElementById('neededT1').textContent = needed.toLocaleString();
-        document.getElementById('silverCost').textContent = silver.toLocaleString() + " Silver";
+        document.getElementById('silverCost').textContent = silver.toLocaleString();
+        
+        const percent = Math.min(100, (currentVal / goalVal) * 100);
+        document.getElementById('progressBar').style.width = percent + '%';
+        document.getElementById('progressText').textContent = Math.floor(percent) + '% Complete';
     }
 
-    // Initial run
+    function clearInv() {
+        document.querySelectorAll('.inv-input').forEach(i => i.value = 0);
+        localStorage.clear();
+        calculate();
+    }
+
     calculate();
 </script>
-
 </body>
 </html>
