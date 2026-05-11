@@ -3,72 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blackwave Rune Calc</title>
+    <title>Blackwave Rune Calc - T10 Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #0f172a; color: #e2e8f0; }
         .bw-card { background: #1e293b; border: 1px solid #334155; }
         .bw-input { background: #0f172a; border: 1px solid #475569; color: white; }
         .bw-input:focus { border-color: #38bdf8; outline: none; box-shadow: 0 0 10px rgba(56, 189, 248, 0.2); }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        .tier-header { grid-column: span 2; color: #38bdf8; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.05em; padding-top: 10px; border-bottom: 1px solid #334155; margin-bottom: 5px; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
     </style>
 </head>
-<body class="p-4 sm:p-8">
+<body class="p-4 md:p-10">
 
-    <div class="max-w-2xl mx-auto">
-        <div class="flex items-center gap-3 mb-6">
-            <div class="p-2 bg-blue-500/20 rounded-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
+    <div class="max-w-4xl mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-blue-500/20 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-black tracking-tighter uppercase">Rune Master <span class="text-blue-500">T10</span></h1>
             </div>
-            <h1 class="text-2xl font-bold tracking-tight">RUNE MERGE CALCULATOR</h1>
+            <button onclick="clearInv()" class="text-[10px] font-bold tracking-widest text-slate-500 hover:text-red-400 uppercase transition-colors">
+                Reset All Data
+            </button>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            <div class="space-y-6">
-                <div class="bw-card p-5 rounded-xl">
-                    <label class="block text-sm font-semibold text-blue-400 uppercase mb-2">Target Rune</label>
-                    <select id="goalRune" onchange="calculate()" class="bw-input w-full p-3 rounded-lg"></select>
-                </div>
-
-                <div class="bw-card p-5 rounded-xl">
-                    <label class="block text-sm font-semibold text-blue-400 uppercase mb-2">Current Inventory</label>
-                    <div id="inventoryInputs" class="grid grid-cols-2 gap-3 max-h-[400px] overflow-y-auto pr-2">
-                        </div>
-                </div>
-            </div>
-
-            <div class="space-y-6">
-                <div class="bw-card p-6 rounded-xl border-l-4 border-blue-500 shadow-lg">
-                    <h3 class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-4">Requirement Analysis</h3>
+            <div class="lg:col-span-1 space-y-6">
+                <div class="bw-card p-6 rounded-2xl shadow-xl">
+                    <label class="block text-xs font-bold text-blue-400 uppercase mb-3">Target Objective</label>
+                    <select id="goalRune" onchange="calculate()" class="bw-input w-full p-4 rounded-xl font-bold text-lg cursor-pointer"></select>
                     
-                    <div class="space-y-4">
-                        <div>
-                            <p class="text-sm text-gray-400">Net T1-1★ Runes Needed</p>
-                            <p id="neededT1" class="text-3xl font-mono font-bold text-white">0</p>
+                    <div class="mt-8 p-4 bg-slate-900/50 rounded-xl border border-slate-700">
+                        <p class="text-[10px] text-gray-500 uppercase font-bold mb-2 text-center">Completion Progress</p>
+                        <div class="w-full bg-slate-800 rounded-full h-3">
+                            <div id="progressBar" class="bg-blue-500 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
                         </div>
-                        
-                        <div class="pt-4 border-t border-slate-700">
-                            <p class="text-sm text-gray-400 font-semibold mb-1">Estimated Cost</p>
-                            <div class="flex items-center gap-2">
-                                <span id="silverCost" class="text-xl font-bold text-yellow-500">0</span>
-                                <span class="text-xs text-gray-500 uppercase">Silver</span>
-                            </div>
-                        </div>
-
-                        <div id="progressBox" class="w-full bg-slate-800 rounded-full h-2.5 mt-4">
-                            <div id="progressBar" class="bg-blue-500 h-2.5 rounded-full" style="width: 0%"></div>
-                        </div>
-                        <p id="progressText" class="text-right text-[10px] text-gray-500 uppercase font-bold">0% Complete</p>
+                        <p id="progressText" class="text-center text-xs font-mono mt-2 text-blue-400">0%</p>
                     </div>
                 </div>
 
-                <button onclick="clearInv()" class="w-full py-3 text-xs font-bold tracking-widest text-slate-400 hover:text-white uppercase transition-colors">
-                    Reset Inventory
-                </button>
+                <div class="bw-card p-6 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900">
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-[10px] text-gray-400 font-bold uppercase">Runes to Acquire</p>
+                            <p id="neededT1" class="text-3xl font-mono font-bold text-white leading-none">0</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-400 font-bold uppercase">Silver Required</p>
+                            <p id="silverCost" class="text-2xl font-mono font-bold text-yellow-500 leading-none">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2">
+                <div class="bw-card p-6 rounded-2xl">
+                    <div class="flex justify-between items-center mb-4">
+                        <label class="text-xs font-bold text-blue-400 uppercase">Current Stockpile</label>
+                        <span class="text-[10px] text-slate-500 italic">Values autosave locally</span>
+                    </div>
+                    <div id="inventoryInputs" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-h-[600px] overflow-y-auto pr-4">
+                        </div>
+                </div>
             </div>
 
         </div>
@@ -77,15 +79,18 @@
 <script>
     const SILVER_PER_MERGE = 2;
     const runeList = [];
-    const maxTier = 5;
+    const maxTier = 10;
     const starsPerTier = 3;
 
-    // Build the data model
+    // Generate T1-1★ to T10-3★
     let power = 0;
     for (let t = 1; t <= maxTier; t++) {
         for (let s = 1; s <= starsPerTier; s++) {
-            if (t === 5 && s > 1) break;
-            runeList.push({ name: `T${t}-${s}★`, val: Math.pow(2, power) });
+            runeList.push({ 
+                name: `T${t}-${s}★`, 
+                val: Math.pow(2, power),
+                tier: t
+            });
             power++;
         }
     }
@@ -93,7 +98,8 @@
     const goalSelect = document.getElementById('goalRune');
     const invGrid = document.getElementById('inventoryInputs');
 
-    // Build UI Elements
+    let currentTierHeading = 0;
+
     runeList.forEach((rune, i) => {
         // Dropdown
         const opt = document.createElement('option');
@@ -102,45 +108,56 @@
         if(i === runeList.length - 1) opt.selected = true;
         goalSelect.appendChild(opt);
 
-        // Inputs
+        // Tier Header logic
+        if (rune.tier !== currentTierHeading) {
+            const header = document.createElement('div');
+            header.className = 'tier-header';
+            header.textContent = `TIER ${rune.tier}`;
+            invGrid.appendChild(header);
+            currentTierHeading = rune.tier;
+        }
+
+        // Inventory Inputs
         const div = document.createElement('div');
+        div.className = 'flex flex-col gap-1';
         div.innerHTML = `
-            <label class="text-[10px] text-slate-500 font-bold ml-1">${rune.name}</label>
+            <label class="text-[9px] text-slate-400 font-bold uppercase">${rune.name}</label>
             <input type="number" min="0" value="${localStorage.getItem(rune.name) || 0}" 
-                   class="bw-input inv-input w-full p-2 rounded-md text-sm" 
+                   class="bw-input inv-input w-full p-2 rounded-lg text-xs" 
                    data-name="${rune.name}" data-val="${rune.val}" oninput="calculate()">
         `;
         invGrid.appendChild(div);
     });
 
     function calculate() {
-        const goalVal = parseInt(goalSelect.value);
-        let currentVal = 0;
+        const goalVal = BigInt(goalSelect.value);
+        let currentVal = BigInt(0);
 
         document.querySelectorAll('.inv-input').forEach(input => {
-            const count = parseInt(input.value) || 0;
-            const val = parseInt(input.dataset.val);
+            const count = BigInt(input.value) || BigInt(0);
+            const val = BigInt(input.dataset.val);
             currentVal += (count * val);
-            // Save to local storage
-            localStorage.setItem(input.dataset.name, count);
+            localStorage.setItem(input.dataset.name, input.value);
         });
 
-        const needed = Math.max(0, goalVal - currentVal);
-        const silver = needed > 0 ? (needed - 1) * SILVER_PER_MERGE : 0;
+        const needed = goalVal > currentVal ? goalVal - currentVal : BigInt(0);
+        const silver = needed > BigInt(0) ? (needed - BigInt(1)) * BigInt(SILVER_PER_MERGE) : BigInt(0);
         
-        // Update UI
+        // Display with BigInt handling for massive numbers
         document.getElementById('neededT1').textContent = needed.toLocaleString();
         document.getElementById('silverCost').textContent = silver.toLocaleString();
         
-        const percent = Math.min(100, (currentVal / goalVal) * 100);
-        document.getElementById('progressBar').style.width = percent + '%';
-        document.getElementById('progressText').textContent = Math.floor(percent) + '% Complete';
+        const percent = Number((currentVal * BigInt(10000)) / goalVal) / 100;
+        document.getElementById('progressBar').style.width = Math.min(100, percent) + '%';
+        document.getElementById('progressText').textContent = percent.toFixed(2) + '% Complete';
     }
 
     function clearInv() {
-        document.querySelectorAll('.inv-input').forEach(i => i.value = 0);
-        localStorage.clear();
-        calculate();
+        if(confirm("Wipe all inventory data?")) {
+            document.querySelectorAll('.inv-input').forEach(i => i.value = 0);
+            localStorage.clear();
+            calculate();
+        }
     }
 
     calculate();
