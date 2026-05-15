@@ -5,31 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eternal Idle Rune Calc</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { background-color: #0b1221; color: #e2e8f0; }
-        .bw-card { background: #161f32; border: 1px solid #242f45; border-radius: 1rem; }
-        .bw-input { background: #0b1221; border: 1px solid #2d3a54; color: white; transition: all 0.2s; }
-        .bw-input:focus { border-color: #3b82f6; outline: none; box-shadow: 0 0 8px rgba(59, 130, 246, 0.3); }
-        .tier-row { border-bottom: 1px solid #1e293b; padding: 12px 0; display: flex; align-items: center; gap: 1rem; }
-        .tier-label { width: 60px; color: #3b82f6; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; flex-shrink: 0; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #242f45; border-radius: 10px; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="p-4 md:p-10">
 
     <div class="max-w-5xl mx-auto">
-        <div class="flex justify-between items-center mb-8">
+        <div class="flex justify-between items-center mb-4">
             <h1 class="text-2xl font-black italic tracking-tighter uppercase text-white">RUNE CALC <span class="text-blue-500">V0.0.1</span></h1>
-            <button onclick="clearInv()" class="text-[10px] font-bold tracking-widest text-slate-500 hover:text-red-400 uppercase">Reset All Data</button>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
+        <!-- Tab Bar -->
+        <div class="flex gap-3 mb-6">
+            <button id="tabGoalBtn" class="tab-btn tab-btn-active" onclick="switchTab('goal')">Goal Calculator</button>
+            <button id="tabInvBtn" class="tab-btn tab-btn-inactive" onclick="switchTab('inventory')">Inventory Total</button>
+            <button id="resetBtn" onclick="resetCurrentTab()" class="text-[10px] font-bold tracking-widest text-slate-500 hover:text-red-400 uppercase ml-auto">Reset This Tab</button>
+        </div>
+
+        <!-- ====== GOAL CALCULATOR TAB ====== -->
+        <div id="goalTabPanel" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div class="lg:col-span-4 space-y-6">
                 <div class="bw-card p-6">
                     <label class="block text-[10px] font-bold text-slate-400 uppercase mb-3">Target Objective</label>
-                    <select id="goalRune" onchange="calculate()" class="bw-input w-full p-4 rounded-xl font-bold text-lg cursor-pointer mb-6"></select>
+                    <select id="goalRune" onchange="calculateGoal()" class="bw-input w-full p-4 rounded-xl font-bold text-lg cursor-pointer mb-6"></select>
                     
                     <div class="p-4 bg-[#0b1221] rounded-xl border border-[#242f45]">
                         <p id="progressText" class="text-center text-xs font-bold mb-2 text-blue-400">0.00% Complete</p>
@@ -58,100 +55,34 @@
                         <span class="text-[9px] text-slate-600 uppercase font-bold tracking-widest">Values Save Automatically</span>
                     </div>
                     
-                    <div id="inventoryContainer" class="max-h-[600px] overflow-y-auto pr-2">
-                        </div>
+                    <div id="goalInventoryContainer" class="max-h-[600px] overflow-y-auto pr-2"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== INVENTORY TOTAL TAB ====== -->
+        <div id="inventoryTabPanel" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8 panel-hidden">
+            <div class="lg:col-span-4 space-y-6">
+                <div class="bw-card p-6">
+                    <p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Total Rune Value</p>
+                    <p id="invTotalValue" class="text-3xl font-mono font-bold text-white tracking-tight">0</p>
+                    <p class="text-[9px] text-slate-500 font-bold uppercase mt-1">T1 Common Equivalent</p>
                 </div>
             </div>
 
+            <div class="lg:col-span-8">
+                <div class="bw-card p-6">
+                    <div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-2">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">My Rune Inventory</label>
+                        <span class="text-[9px] text-slate-600 uppercase font-bold tracking-widest">Values Save Automatically</span>
+                    </div>
+                    
+                    <div id="invInventoryContainer" class="max-h-[600px] overflow-y-auto pr-2"></div>
+                </div>
+            </div>
         </div>
     </div>
 
-<script>
-    const SILVER_PER_MERGE = 2;
-    const maxTier = 10;
-    const starsPerTier = 3;
-    const runeList = [];
-
-    // Generate Data
-    let power = 0;
-    for (let t = 1; t <= maxTier; t++) {
-        for (let s = 1; s <= starsPerTier; s++) {
-            runeList.push({ name: `T${t}-${s}★`, val: BigInt(2 ** power), tier: t });
-            power++;
-        }
-    }
-
-    const goalSelect = document.getElementById('goalRune');
-    const container = document.getElementById('inventoryContainer');
-
-    // Build Dropdown
-    runeList.forEach((rune, i) => {
-        const opt = document.createElement('option');
-        opt.value = rune.val.toString();
-        opt.textContent = rune.name;
-        if(i === runeList.length - 1) opt.selected = true;
-        goalSelect.appendChild(opt);
-    });
-
-    // Build Inventory Rows (One row per Tier)
-    for (let t = 1; t <= maxTier; t++) {
-        const row = document.createElement('div');
-        row.className = 'tier-row';
-        
-        const label = document.createElement('div');
-        label.className = 'tier-label';
-        label.textContent = `Tier ${t}`;
-        row.appendChild(label);
-
-        const inputGroup = document.createElement('div');
-        inputGroup.className = 'grid grid-cols-3 gap-4 flex-grow';
-
-        runeList.filter(r => r.tier === t).forEach(rune => {
-            const wrapper = document.createElement('div');
-            wrapper.innerHTML = `
-                <label class="text-[9px] text-slate-500 font-bold ml-1">${rune.name}</label>
-                <input type="number" min="0" value="${localStorage.getItem(rune.name) || 0}" 
-                       class="bw-input inv-input w-full p-2 rounded-lg text-xs" 
-                       data-name="${rune.name}" data-val="${rune.val}" oninput="calculate()">
-            `;
-            inputGroup.appendChild(wrapper);
-        });
-
-        row.appendChild(inputGroup);
-        container.appendChild(row);
-    }
-
-    function calculate() {
-        const goalVal = BigInt(goalSelect.value);
-        let currentVal = BigInt(0);
-
-        document.querySelectorAll('.inv-input').forEach(input => {
-            const count = BigInt(input.value) || BigInt(0);
-            const val = BigInt(input.dataset.val);
-            currentVal += (count * val);
-            localStorage.setItem(input.dataset.name, input.value);
-        });
-
-        const needed = goalVal > currentVal ? goalVal - currentVal : BigInt(0);
-        const silver = needed > BigInt(0) ? (needed - BigInt(1)) * BigInt(SILVER_PER_MERGE) : BigInt(0);
-        
-        document.getElementById('neededT1').textContent = needed.toLocaleString();
-        document.getElementById('silverCost').textContent = silver.toLocaleString();
-        
-        const percent = Number((currentVal * BigInt(10000)) / goalVal) / 100;
-        document.getElementById('progressBar').style.width = Math.min(100, percent) + '%';
-        document.getElementById('progressText').textContent = percent.toFixed(2) + '% Complete';
-    }
-
-    function clearInv() {
-        if(confirm("Clear your inventory?")) {
-            document.querySelectorAll('.inv-input').forEach(i => i.value = 0);
-            localStorage.clear();
-            calculate();
-        }
-    }
-
-    calculate();
-</script>
+    <script src="app.js"></script>
 </body>
 </html>

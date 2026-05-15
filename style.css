@@ -1,0 +1,13 @@
+body { background-color: #0b1221; color: #e2e8f0; }
+.bw-card { background: #161f32; border: 1px solid #242f45; border-radius: 1rem; }
+.bw-input { background: #0b1221; border: 1px solid #2d3a54; color: white; transition: all 0.2s; }
+.bw-input:focus { border-color: #3b82f6; outline: none; box-shadow: 0 0 8px rgba(59, 130, 246, 0.3); }
+.tier-row { border-bottom: 1px solid #1e293b; padding: 12px 0; display: flex; align-items: center; gap: 1rem; }
+.tier-label { width: 60px; color: #3b82f6; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; flex-shrink: 0; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: #242f45; border-radius: 10px; }
+.tab-btn { padding: 10px 24px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 9999px; cursor: pointer; transition: all 0.2s; border: none; }
+.tab-btn-active { background: #3b82f6; color: white; }
+.tab-btn-inactive { background: #1e293b; color: #64748b; }
+.tab-btn-inactive:hover { background: #242f45; color: #94a3b8; }
+.panel-hidden { display: none; }
