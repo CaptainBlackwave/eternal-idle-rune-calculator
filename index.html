@@ -11,13 +11,14 @@
 
     <div class="max-w-5xl mx-auto">
         <div class="flex justify-between items-center mb-4">
-            <h1 class="text-2xl font-black italic tracking-tighter uppercase text-white">RUNE CALC <span class="text-blue-500">V0.0.2</span></h1>
+            <h1 class="text-2xl font-black italic tracking-tighter uppercase text-white">RUNE CALC <span class="text-blue-500">V0.0.3</span></h1>
         </div>
 
         <!-- Tab Bar -->
         <div class="flex gap-3 mb-6">
             <button id="tabGoalBtn" class="tab-btn tab-btn-active" onclick="switchTab('goal')">Goal Calculator</button>
             <button id="tabInvBtn" class="tab-btn tab-btn-inactive" onclick="switchTab('inventory')">Inventory Total</button>
+            <button id="tabSolverBtn" class="tab-btn tab-btn-inactive" onclick="switchTab('solver')">What Can I Make?</button>
             <button id="resetBtn" onclick="resetCurrentTab()" class="text-[10px] font-bold tracking-widest text-slate-500 hover:text-red-400 uppercase ml-auto">Reset This Tab</button>
         </div>
 
@@ -78,6 +79,51 @@
                     </div>
                     
                     <div id="invInventoryContainer" class="max-h-[600px] overflow-y-auto pr-2"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== WHAT CAN I MAKE? TAB ====== -->
+        <div id="solverTabPanel" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8 panel-hidden">
+            <div class="lg:col-span-4 space-y-6">
+                <div class="bw-card p-6">
+                    <p class="text-[10px] text-slate-400 font-bold uppercase mb-1">What Can I Craft Right Now?</p>
+                    <p id="solverBestRune" class="craftable-badge">—</p>
+                    <p class="text-[9px] text-slate-500 font-bold uppercase mt-2">Highest Mergeable Rune</p>
+                </div>
+
+                <div class="bw-card p-6">
+                    <p class="text-[10px] text-slate-400 font-bold uppercase mb-2">Remaining After Merges</p>
+                    <div id="solverLeftovers" class="text-sm text-slate-400">—</div>
+                </div>
+
+                <div class="bw-card p-6 space-y-3">
+                    <div>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Silver Spent</p>
+                        <p id="solverSilver" class="text-2xl font-mono font-bold text-yellow-500 tracking-tight">0</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Shortfall Alert</p>
+                        <p id="solverShortfall" class="text-sm font-mono font-bold tracking-tight shortfall-none">All runes craftable — you can max out!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-8 space-y-6">
+                <div class="bw-card p-6">
+                    <div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-2">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">My Rune Collection</label>
+                        <span class="text-[9px] text-slate-600 uppercase font-bold tracking-widest">Values Save Automatically</span>
+                    </div>
+                    <div id="solverInventoryContainer" class="max-h-[400px] overflow-y-auto pr-2"></div>
+                </div>
+
+                <div class="bw-card p-6">
+                    <div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-2">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Rune Reference</label>
+                        <span class="text-[9px] text-slate-600 uppercase font-bold tracking-widest">All Named Rune Types</span>
+                    </div>
+                    <div id="runeReferenceContainer" class="max-h-[400px] overflow-y-auto pr-2"></div>
                 </div>
             </div>
         </div>

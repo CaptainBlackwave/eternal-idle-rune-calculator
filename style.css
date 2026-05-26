@@ -11,3 +11,13 @@ body { background-color: #0b1221; color: #e2e8f0; }
 .tab-btn-inactive { background: #1e293b; color: #64748b; }
 .tab-btn-inactive:hover { background: #242f45; color: #94a3b8; }
 .panel-hidden { display: none; }
+.ref-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.ref-table th { text-align: left; padding: 6px 8px; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #242f45; }
+.ref-table td { padding: 4px 8px; border-bottom: 1px solid #1e293b; }
+.ref-category { color: #3b82f6; font-weight: 700; font-size: 11px; padding-top: 8px !important; }
+.ref-school { color: #94a3b8; padding-left: 16px !important; }
+.ref-rune { color: #e2e8f0; padding-left: 32px !important; }
+.craftable-badge { font-size: 1.5rem; font-weight: 900; color: #22c55e; letter-spacing: 0.05em; }
+.leftover-tag { display: inline-block; background: #1e293b; padding: 2px 8px; border-radius: 4px; font-size: 11px; color: #94a3b8; margin: 1px; }
+.shortfall-positive { color: #f59e0b; }
+.shortfall-none { color: #22c55e; }
